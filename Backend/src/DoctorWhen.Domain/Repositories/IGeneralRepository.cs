@@ -1,8 +1,8 @@
 ﻿namespace DoctorWhen.Domain.Repositories;
-public interface IGeneralRepository<T>
+public interface IGeneralRepository
 {
-    Task<T> GetByIdAsync(int id);
-    Task AddAsync(T entity);
-    Task<T> UpdateAsync(T entity);
-    Task<T> DeleteAsync(T entity);
+    void Add<T>(T entity) where T: class;
+    void Update<T>(T entity) where T: class;
+    void Delete<T>(T entity) where T: class;
+    void DeleteRange<T>(T[] entityArray) where T: class;
 }

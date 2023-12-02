@@ -2,7 +2,7 @@
 using DoctorWhen.Persistence.Repository.RepositoryAccess;
 
 namespace DoctorWhen.Persistence.Repository;
-public class GeneralRepository : IGeneralRepository<T>
+public class GeneralRepository : IGeneralRepository
 {
     private readonly DoctorWhenContext _context;
     public GeneralRepository(DoctorWhenContext context)
@@ -16,14 +16,19 @@ public class GeneralRepository : IGeneralRepository<T>
         _context.Add(entity);
     }
 
-    public void Update<T>(T entity)
+    public void Update<T>(T entity) where T : class
     {
         _context.Update(entity);
     }
 
-    public void Delete<T>(T entity)
+    public void Delete<T>(T entity) where T: class
     {
         _context.Remove(entity);
+    }
+
+    public void DeleteRange<T>(T[] entityArray) where T : class
+    {
+        _context.RemoveRange(entityArray);
     }
 }
 
