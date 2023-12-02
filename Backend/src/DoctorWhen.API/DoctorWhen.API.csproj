@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.25" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.25">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
@@ -14,6 +20,7 @@
     <ProjectReference Include="..\..\shared\DoctorWhen.Communication\DoctorWhen.Communication.csproj" />
     <ProjectReference Include="..\..\shared\DoctorWhen.Exception\DoctorWhen.Exception.csproj" />
     <ProjectReference Include="..\DoctorWhen.Application\DoctorWhen.Application.csproj" />
+    <ProjectReference Include="..\DoctorWhen.Persistence\DoctorWhen.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
