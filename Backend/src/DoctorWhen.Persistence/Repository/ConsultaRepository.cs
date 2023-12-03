@@ -13,7 +13,7 @@ public class ConsultaRepository : IConsultaRepository
         this._context = context;
     }
 
-    public async Task<IList<Consulta>> GetAllConsultasByDate(DateTime date)
+    public async Task<IList<Consulta>> GetAllConsultasByDateAsync(DateTime date)
     {
         IQueryable<Consulta> query = _context.Consultas
             .Include(c => c.Atendente)
@@ -26,7 +26,7 @@ public class ConsultaRepository : IConsultaRepository
         return await query.ToListAsync();
     }
 
-    public async Task<IList<Consulta>> GetAllConsultasByMedico(long medicoId)
+    public async Task<IList<Consulta>> GetAllConsultasByMedicoAsync(long medicoId)
     {
         IQueryable<Consulta> query = _context.Consultas
             .Include(c => c.Medico)
@@ -37,7 +37,7 @@ public class ConsultaRepository : IConsultaRepository
         return await query.ToListAsync();
     }
 
-    public async Task<IList<Consulta>> GetAllConsultasByPaciente(long pacienteId)
+    public async Task<IList<Consulta>> GetAllConsultasByPacienteAsync(long pacienteId)
     {
         IQueryable<Consulta> query = _context.Consultas
             .Include (c => c.Paciente)
@@ -50,7 +50,7 @@ public class ConsultaRepository : IConsultaRepository
         return await query.ToListAsync();
     }
 
-    public async Task<Consulta> GetConsultaById(long consultaId)
+    public async Task<Consulta> GetConsultaByIdAsync(long consultaId)
     {
         IQueryable<Consulta> query = _context.Consultas
             .Include(c => c.Paciente)

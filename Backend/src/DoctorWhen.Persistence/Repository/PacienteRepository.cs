@@ -13,7 +13,7 @@ public class PacienteRepository : IPacienteRepository
         this._context = context;
     }
 
-    public async Task<Paciente> GetPacienteByEmail(string email)
+    public async Task<Paciente> GetPacienteByEmailAsync(string email)
     {
         IQueryable<Paciente> query = _context.Pacientes
             .Include(p => p.Medicos)
@@ -25,7 +25,7 @@ public class PacienteRepository : IPacienteRepository
         
     }
 
-    public async Task<Paciente> GetPacienteById(long id)
+    public async Task<Paciente> GetPacienteByIdAsync(long id)
     {
         IQueryable<Paciente> query = _context.Pacientes
             .Include(p => p.Medicos)

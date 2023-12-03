@@ -35,7 +35,7 @@ public class MedicoRepository : IMedicoRepository
         return await query.ToListAsync();
     }
 
-    public async Task<Medico> GetMedicoById(long id, bool includeConsultas)
+    public async Task<Medico> GetMedicoByIdAsync(long id, bool includeConsultas)
     {
         IQueryable<Medico> query = _context.Medicos
             .Include(m => m.Pacientes)

@@ -1,8 +1,8 @@
 ﻿namespace DoctorWhen.Domain.Repositories;
 public interface IConsultaRepository
 {
-    Task<IList<Entities.Consulta>> GetAllConsultasByDate(DateTime date);
-    Task<IList<Entities.Consulta>> GetAllConsultasByPaciente(long pacienteId);
-    Task<IList<Entities.Consulta>> GetAllConsultasByMedico(long medicoId);
-    Task<Entities.Consulta> GetConsultaById(long consultaId);
+    Task<IList<Entities.Consulta>> GetAllConsultasByDateAsync(DateTime date);
+    Task<IList<Entities.Consulta>> GetAllConsultasByPacienteAsync(long pacienteId);
+    Task<IList<Entities.Consulta>> GetAllConsultasByMedicoAsync(long medicoId);
+    Task<Entities.Consulta> GetConsultaByIdAsync(long consultaId);
 }
