@@ -2,6 +2,7 @@ using DoctorWhen.Domain.Extensions;
 using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using DoctorWhen.Persistence;
 using Microsoft.EntityFrameworkCore;
+using DoctorWhen.API.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+// Adicionando a camada de persistência por meio do Bootstrapper.cs
 builder.Services.AddPersistence(builder.Configuration);
-/*builder.Services.AddDbContext<DoctorWhenContext>(
-    context => context.UseSqlServer(builder.Configuration.GetDatabaseConnection()) 
-    // builder.Configuration.GetConnectionString("nomeDaChave") encapsulado em Domain/Extensions (Pacote NuGet Microsoft.Extensions.Configuration)
-);*/
+
+// Adicionando Filro de Exceções customizadas
+builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
 var app = builder.Build();
 
