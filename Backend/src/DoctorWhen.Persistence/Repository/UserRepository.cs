@@ -17,13 +17,13 @@ public class UserRepository : GeneralRepository, IUserRepository
         return await _context.Users.ToListAsync();
     }
 
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        return await _context.Users.SingleOrDefaultAsync(u => u.Email.Equals(email.ToLower()));
+    }
+
     public async Task<User> GetUserByIdAsync(long id)
     {
         return await _context.Users.FindAsync(id);
-    }
-
-    public async Task<User> GetUserByUserNameAsync(string userName)
-    {
-        return await _context.Users.SingleOrDefaultAsync(u => u.UserName.Equals(userName.ToLower()));
     }
 }

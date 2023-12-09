@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
 namespace DoctorWhen.Exception;
-public class ValidatorErrorsException : DoctorWhenExceptions
+public class ValidatorErrorsException : DoctorWhenException
 {
     public List<string> ErrorMessages { get; set; }
 

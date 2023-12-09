@@ -97,6 +97,15 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi possível efetuar login. Verifique o e-mail e a senha informados..
+        /// </summary>
+        public static string INVALID_LOGIN {
+            get {
+                return ResourceManager.GetString("INVALID_LOGIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve conter no mínimo 6 (seis) caracteres..
         /// </summary>
         public static string INVALID_PASSWORD {
@@ -111,6 +120,24 @@ namespace DoctorWhen.Exception {
         public static string UNKNOWN_ERROR {
             get {
                 return ResourceManager.GetString("UNKNOWN_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi possível cadastrar o usuário. Tente novamente com e-mail e senha diferentes..
+        /// </summary>
+        public static string USER_ALREADY_EXISTS {
+            get {
+                return ResourceManager.GetString("USER_ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O usuário não está cadastrado na base de dados. Verifique os dados informados..
+        /// </summary>
+        public static string USER_NOT_EXISTS {
+            get {
+                return ResourceManager.GetString("USER_NOT_EXISTS", resourceCulture);
             }
         }
     }

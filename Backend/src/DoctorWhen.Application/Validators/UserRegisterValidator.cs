@@ -8,7 +8,7 @@ public class UserRegisterValidator : AbstractValidator<RequestUserJson>
     public UserRegisterValidator()
     {
         // Validar se os campos estão vazios.
-        RuleFor(r => r.Nome).NotEmpty().WithMessage(ResourceErrorMessages.EMPTY_NAME);
+        RuleFor(r => r.UserName).NotEmpty().WithMessage(ResourceErrorMessages.EMPTY_NAME);
         RuleFor(r => r.Email).NotEmpty().WithMessage(ResourceErrorMessages.EMPTY_EMAIL);
         RuleFor(r => r.Senha).NotEmpty().WithMessage(ResourceErrorMessages.EMPTY_PASSWORD);
 

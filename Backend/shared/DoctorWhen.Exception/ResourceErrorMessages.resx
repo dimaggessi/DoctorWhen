@@ -129,10 +129,19 @@
   <data name="INVALID_EMAIL" xml:space="preserve">
     <value>O e-mail informado é invalido.</value>
   </data>
+  <data name="INVALID_LOGIN" xml:space="preserve">
+    <value>Não foi possível efetuar login. Verifique o e-mail e a senha informados.</value>
+  </data>
   <data name="INVALID_PASSWORD" xml:space="preserve">
     <value>A senha deve conter no mínimo 6 (seis) caracteres.</value>
   </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>
+  </data>
+  <data name="USER_ALREADY_EXISTS" xml:space="preserve">
+    <value>Não foi possível cadastrar o usuário. Tente novamente com e-mail e senha diferentes.</value>
+  </data>
+  <data name="USER_NOT_EXISTS" xml:space="preserve">
+    <value>O usuário não está cadastrado na base de dados. Verifique os dados informados.</value>
   </data>
 </root>

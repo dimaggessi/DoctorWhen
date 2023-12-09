@@ -5,5 +5,5 @@ public interface IUserRepository : IGeneralRepository
 {
     Task<ICollection<User>> GetAllUsersAsync();
     Task<User> GetUserByIdAsync(long id);
-    Task<User> GetUserByUserNameAsync(string userName);
+    Task<User> GetUserByEmailAsync(string email);
 }
