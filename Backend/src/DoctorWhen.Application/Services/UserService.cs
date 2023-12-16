@@ -3,6 +3,7 @@ using DoctorWhen.Application.Interfaces;
 using DoctorWhen.Application.Validators;
 using DoctorWhen.Communication.Requests;
 using DoctorWhen.Communication.Responses;
+using DoctorWhen.Domain.Entities;
 using DoctorWhen.Domain.Identity;
 using DoctorWhen.Domain.Repositories;
 using DoctorWhen.Exception;
@@ -17,30 +18,32 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITokenConfigurator _tokenConfigurator;
+    private readonly RoleManager<Role> _roleManager;
+    private readonly IAtendenteRepository _atendenteRepository;
 
     public UserService(UserManager<User> userManager,
                        SignInManager<User> signInManager,
                        IMapper mapper,
                        IUserRepository userRepository,
-                       IUnitOfWork unitOfWork)
+                       IUnitOfWork unitOfWork,
+                       ITokenConfigurator tokenConfigurator,
+                       RoleManager<Role> roleManager,
+                       IAtendenteRepository atendenteRepository)
     {
         this._userManager = userManager;
         this._signInManager = signInManager;
         this._mapper = mapper;
         this._userRepository = userRepository;
         this._unitOfWork = unitOfWork;
+        this._tokenConfigurator = tokenConfigurator;
+        this._roleManager = roleManager;
+        this._atendenteRepository = atendenteRepository;
     }
 
-    public async Task<bool> CheckIfUserExists(string email)
+    public async Task<ResponseUserJson> GetUserByEmail(RequestEmailJson request)
     {
-        var user = await _userRepository.GetUserByEmailAsync(email);
-        
-        return user != null;
-    }
-
-    public async Task<ResponseUserJson> GetUserByEmail(string email)
-    {
-        var user = await _userRepository.GetUserByEmailAsync(email);
+        var user = await _userRepository.GetUserByEmailAsync(request.Email.ToLower());
         if (user == null)
         {
             throw new InvalidUserException(ResourceErrorMessages.USER_NOT_EXISTS);
@@ -60,59 +63,119 @@ public class UserService : IUserService
         return _mapper.Map<ResponseUserJson>(user);
     }
 
-    public async Task<SignInResult> SignInAsync(RequestLoginJson request)
+    public async Task<ResponseLoginJson> LoginAsync(RequestLoginJson request)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Email == request.Email.ToLower());
 
-        if (user == null)
-        {
-            throw new InvalidUserException(ResourceErrorMessages.INVALID_LOGIN);
-        }
+        if (user == null) { throw new InvalidUserException(ResourceErrorMessages.INVALID_LOGIN); }
 
         // passa "false" como parâmetro para ele não bloquear o usuário caso haja falha no login
-        return await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+        var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+
+        if (!result.Succeeded)
+        {
+           throw new InvalidUserException(ResourceErrorMessages.INCORRECT_PASSWORD);
+        }
+
+        return new ResponseLoginJson
+        {
+            UserName = user.UserName,
+            Token = _tokenConfigurator.GetToken(user).Result
+        };
     }
 
     public async Task<ResponseUserJson> CreateAccount(RequestUserJson request)
     {
-        await RequestValidation(request);
+        await RequestCreateUserValidation(request);
 
         User user = _mapper.Map<User>(request);
-        var existingUser = _userManager.FindByEmailAsync(user.Email);
-        ResponseUserJson userToReturn = new();
+        var existingUser = await _userRepository.GetUserByEmailAsync(user.Email.ToLower());
 
-        if (existingUser == null)
+        if (existingUser != null) throw new InvalidUserException(ResourceErrorMessages.USER_ALREADY_EXISTS);
+
+        // o AutoMapper está configurado em API.Services para ignorar o Password na hora de mapear
+        // tendo em vista que o UserManager será responsável por gerá-lo
+        var result = await _userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded) throw new InvalidUserException(ResourceErrorMessages.USER_PERSIST_ERROR);        
+
+        var userToReturn = await _userRepository.GetUserByEmailAsync(request.Email.ToLower());
+
+        var atendente = new Atendente
         {
-            var result = await _userManager.CreateAsync(user, request.Senha);
-            if (result.Succeeded)
-            {
-                userToReturn = _mapper.Map<ResponseUserJson>(result);
-            }
-            else
-            {
-                throw new InvalidUserException(ResourceErrorMessages.USER_ALREADY_EXISTS);
-            }
-        }
+            UserId = userToReturn.Id,
+            User = userToReturn,
+            Nome = request.Nome,
+        };
 
-        return userToReturn;
+        _atendenteRepository.Add(atendente);
+
+        // cadastra o usuário como Atendente
+        await _userManager.AddToRoleAsync(userToReturn, "Atendente");
+        
+        await _unitOfWork.Commit();
+
+        return _mapper.Map<ResponseUserJson>(userToReturn);
     }
 
-    public async Task<ResponseUserJson> UpdateAccount(RequestUserJson request)
+    public async Task<ResponseUserJson> UpdateAccount(RequestUserUpdateJson request, long id)
     {
-        await RequestValidation(request);
+        await RequestUpdateUserValidation(request);
 
-        var user = await _userRepository.GetUserByEmailAsync(request.Email.ToLower());
+        var user = await _userRepository.GetUserByIdAsync(id);
         if (user == null) throw new InvalidUserException(ResourceErrorMessages.USER_NOT_EXISTS);
 
-        user = _mapper.Map<User>(request);
-        _userRepository.Update(user);
+        var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
-        return _mapper.Map<ResponseUserJson>(user);
+        if (result.Succeeded)
+        {
+            _userRepository.Update(user);
+
+            await _unitOfWork.Commit();
+        }
+        else
+        {
+            throw new InvalidUserException(ResourceErrorMessages.USER_PASSWORD_RESET_ERROR);
+        }
+
+        var atendente = await _atendenteRepository.GetByIdAsync(id);
+        atendente.Nome = request.Nome;
+
+        _atendenteRepository.Update(atendente);
+
+        await _unitOfWork.Commit();
+
+        var updatedUser = await _userRepository.GetUserByIdAsync(id);
+        
+        return _mapper.Map<ResponseUserJson>(updatedUser);
     }
 
-    private async static Task RequestValidation(RequestUserJson request)
+    public async Task DeleteAsync(long id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id);
+        if (user == null) throw new InvalidUserException(ResourceErrorMessages.USER_NOT_EXISTS);
+
+        // O UserManager deleta em cascata,
+        // não precisa especificar que o registro na tabela Atendente deve ser excluído também
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded) throw new InvalidUserException(ResourceErrorMessages.USER_DELETION_ERROR);
+
+    }
+
+    private async static Task RequestCreateUserValidation(RequestUserJson request)
     {
         var validator = new UserRegisterValidator();
+        var result = await validator.ValidateAsync(request);
+
+        if (!result.IsValid)
+        {
+            var errorMessage = result.Errors.Select(e => e.ErrorMessage).ToList();
+            throw new ValidatorErrorsException(errorMessage);
+        }
+    }
+
+    private async static Task RequestUpdateUserValidation(RequestUserUpdateJson request)
+    {
+        var validator = new UserUpdateValidator();
         var result = await validator.ValidateAsync(request);
 
         if (!result.IsValid)

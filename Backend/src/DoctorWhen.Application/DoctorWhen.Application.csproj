@@ -10,12 +10,16 @@
     <ProjectReference Include="..\..\shared\DoctorWhen.Communication\DoctorWhen.Communication.csproj" />
     <ProjectReference Include="..\..\shared\DoctorWhen.Exception\DoctorWhen.Exception.csproj" />
     <ProjectReference Include="..\DoctorWhen.Domain\DoctorWhen.Domain.csproj" />
+    <ProjectReference Include="..\DoctorWhen.Persistence\DoctorWhen.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="11.8.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
   </ItemGroup>
 
 </Project>
