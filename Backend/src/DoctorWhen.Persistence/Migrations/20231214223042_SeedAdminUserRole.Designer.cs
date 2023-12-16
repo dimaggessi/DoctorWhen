@@ -4,6 +4,7 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorWhen.Persistence.Migrations
 {
     [DbContext(typeof(DoctorWhenContext))]
-    partial class DoctorWhenContextModelSnapshot : ModelSnapshot
+    [Migration("20231214223042_SeedAdminUserRole")]
+    partial class SeedAdminUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,16 +210,14 @@ namespace DoctorWhen.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "ff74cc6c-7d9a-40f5-9ce6-d028a229d79b",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            ConcurrencyStamp = "35daacfa-5b07-4d4c-81d7-a31689cdfdb5",
+                            Name = "Admin"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "b90b8633-8936-4438-93ac-1853cf6a8df0",
-                            Name = "Atendente",
-                            NormalizedName = "ATENDENTE"
+                            ConcurrencyStamp = "c152eb8c-bdb2-43dd-82ee-7132c4c630b4",
+                            Name = "Atendente"
                         });
                 });
 
@@ -293,11 +293,11 @@ namespace DoctorWhen.Persistence.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bb1ae961-96e4-41a2-a62b-0729ba3cfe85",
+                            ConcurrencyStamp = "e2226fa7-b901-4860-9609-31e23373ad9d",
                             Email = "admin@email.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEObGqHIrsXsdExsZPWrQ3slR/xAivMsxE1gMyDXHDQnlNjz2AXWlGjy/y9zkMU2m6Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPUnT4NB5kINs4nBRxfLxLaPB4ed5ZLjrIp9iQBaLqWPTLrH7aazYqDhvfd0QUz2OA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"

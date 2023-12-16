@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DoctorWhen.Persistence;
 public static class Bootstrapper
 {
-    public static void AddPersistence(this IServiceCollection services, IConfiguration configurationManager)
+    public static void AddPersistenceLayer(this IServiceCollection services, IConfiguration configurationManager)
     {
         AddContext(services, configurationManager);
         AddRepositories(services);
@@ -29,6 +29,8 @@ public static class Bootstrapper
         services.AddScoped<IMedicoRepository, MedicoRepository>();
         services.AddScoped<IPacienteRepository, PacienteRepository>();
         services.AddScoped<IPrescricaoRepository, PrescricaoRepository>();
+        services.AddScoped<IAtendenteRepository, AtendenteRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 
     private static void AddUnitOfWork(IServiceCollection services)

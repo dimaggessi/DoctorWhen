@@ -4,6 +4,7 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorWhen.Persistence.Migrations
 {
     [DbContext(typeof(DoctorWhenContext))]
-    partial class DoctorWhenContextModelSnapshot : ModelSnapshot
+    [Migration("20231214171150_AtendentesChanges")]
+    partial class AtendentesChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,22 +205,6 @@ namespace DoctorWhen.Persistence.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            ConcurrencyStamp = "ff74cc6c-7d9a-40f5-9ce6-d028a229d79b",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            ConcurrencyStamp = "b90b8633-8936-4438-93ac-1853cf6a8df0",
-                            Name = "Atendente",
-                            NormalizedName = "ATENDENTE"
-                        });
                 });
 
             modelBuilder.Entity("DoctorWhen.Domain.Identity.User", b =>
@@ -287,21 +273,6 @@ namespace DoctorWhen.Persistence.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "bb1ae961-96e4-41a2-a62b-0729ba3cfe85",
-                            Email = "admin@email.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEObGqHIrsXsdExsZPWrQ3slR/xAivMsxE1gMyDXHDQnlNjz2AXWlGjy/y9zkMU2m6Q==",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("DoctorWhen.Domain.Identity.UserRole", b =>
@@ -317,13 +288,6 @@ namespace DoctorWhen.Persistence.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1L,
-                            RoleId = 1L
-                        });
                 });
 
             modelBuilder.Entity("MedicoPaciente", b =>

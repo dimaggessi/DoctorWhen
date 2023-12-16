@@ -3,6 +3,7 @@ using DoctorWhen.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DoctorWhen.Persistence.Repository.RepositoryAccess;
 
@@ -43,6 +44,38 @@ public class DoctorWhenContext : IdentityDbContext<User, Role, long, IdentityUse
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
+
+            userRole.HasData(new UserRole() { UserId = 1, RoleId = 1 });
         });
+
+        modelBuilder.Entity<User>(ConfigureUserAdmin);
+        modelBuilder.Entity<Role>(ConfigureRoles);
+
+    }
+
+    private static void ConfigureUserAdmin(EntityTypeBuilder<User> entityBuilder)
+    {
+        var user = new User
+        {
+            Id = 1,
+            UserName = "admin",
+            Email = "admin@email.com"
+        };
+
+        var passwordHasher = new PasswordHasher<User>();
+        user.PasswordHash = passwordHasher.HashPassword(user, "admin123");
+
+        entityBuilder.HasData(user);
+    }
+
+    private static void ConfigureRoles(EntityTypeBuilder<Role> entityBuilder)
+    {
+        var roles = new Role[]
+        {
+            new Role() { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
+            new Role() { Id = 2, Name = "Atendente", NormalizedName = "ATENDENTE" }
+        };
+
+        entityBuilder.HasData(roles);
     }
 }
