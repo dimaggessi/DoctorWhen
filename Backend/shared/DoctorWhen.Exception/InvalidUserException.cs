@@ -1,6 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
 namespace DoctorWhen.Exception;
+
+[Serializable]
 public class InvalidUserException : DoctorWhenException
 {
     public InvalidUserException(string message) : base(message)

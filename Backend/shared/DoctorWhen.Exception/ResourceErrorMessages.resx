@@ -126,6 +126,12 @@
   <data name="EMPTY_PASSWORD" xml:space="preserve">
     <value>A senha do usário deve ser informada.</value>
   </data>
+  <data name="EMPTY_USERNAME" xml:space="preserve">
+    <value>O nome de usuário não pode estar vazio.</value>
+  </data>
+  <data name="INCORRECT_PASSWORD" xml:space="preserve">
+    <value>Falha ao efetuar login. Verifique sua senha.</value>
+  </data>
   <data name="INVALID_EMAIL" xml:space="preserve">
     <value>O e-mail informado é invalido.</value>
   </data>
@@ -135,13 +141,28 @@
   <data name="INVALID_PASSWORD" xml:space="preserve">
     <value>A senha deve conter no mínimo 6 (seis) caracteres.</value>
   </data>
+  <data name="NAME_LENGTH" xml:space="preserve">
+    <value>O nome deve ter 3 (três) ou mais caracteres.</value>
+  </data>
+  <data name="UNAUTHORIZED" xml:space="preserve">
+    <value>Você não está autenticado. Faça login para acessar este recurso.</value>
+  </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>
   </data>
   <data name="USER_ALREADY_EXISTS" xml:space="preserve">
-    <value>Não foi possível cadastrar o usuário. Tente novamente com e-mail e senha diferentes.</value>
+    <value>Usuário já cadastrado na base de dados.</value>
+  </data>
+  <data name="USER_DELETION_ERROR" xml:space="preserve">
+    <value>Não foi possível excluir o usuário da base de dados.</value>
   </data>
   <data name="USER_NOT_EXISTS" xml:space="preserve">
     <value>O usuário não está cadastrado na base de dados. Verifique os dados informados.</value>
+  </data>
+  <data name="USER_PASSWORD_RESET_ERROR" xml:space="preserve">
+    <value>Não foi possível atualizar o usuário com a senha informada.</value>
+  </data>
+  <data name="USER_PERSIST_ERROR" xml:space="preserve">
+    <value>Não foi possível cadastrar usuário. Tente novamente mais tarde.</value>
   </data>
 </root>

@@ -88,6 +88,24 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O nome de usuário não pode estar vazio..
+        /// </summary>
+        public static string EMPTY_USERNAME {
+            get {
+                return ResourceManager.GetString("EMPTY_USERNAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Falha ao efetuar login. Verifique sua senha..
+        /// </summary>
+        public static string INCORRECT_PASSWORD {
+            get {
+                return ResourceManager.GetString("INCORRECT_PASSWORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O e-mail informado é invalido..
         /// </summary>
         public static string INVALID_EMAIL {
@@ -115,6 +133,24 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O nome deve ter 3 (três) ou mais caracteres..
+        /// </summary>
+        public static string NAME_LENGTH {
+            get {
+                return ResourceManager.GetString("NAME_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Você não está autenticado. Faça login para acessar este recurso..
+        /// </summary>
+        public static string UNAUTHORIZED {
+            get {
+                return ResourceManager.GetString("UNAUTHORIZED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Erro desconhecido..
         /// </summary>
         public static string UNKNOWN_ERROR {
@@ -124,11 +160,20 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi possível cadastrar o usuário. Tente novamente com e-mail e senha diferentes..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Usuário já cadastrado na base de dados..
         /// </summary>
         public static string USER_ALREADY_EXISTS {
             get {
                 return ResourceManager.GetString("USER_ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi possível excluir o usuário da base de dados..
+        /// </summary>
+        public static string USER_DELETION_ERROR {
+            get {
+                return ResourceManager.GetString("USER_DELETION_ERROR", resourceCulture);
             }
         }
         
@@ -138,6 +183,24 @@ namespace DoctorWhen.Exception {
         public static string USER_NOT_EXISTS {
             get {
                 return ResourceManager.GetString("USER_NOT_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi possível atualizar o usuário com a senha informada..
+        /// </summary>
+        public static string USER_PASSWORD_RESET_ERROR {
+            get {
+                return ResourceManager.GetString("USER_PASSWORD_RESET_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi possível cadastrar usuário. Tente novamente mais tarde..
+        /// </summary>
+        public static string USER_PERSIST_ERROR {
+            get {
+                return ResourceManager.GetString("USER_PERSIST_ERROR", resourceCulture);
             }
         }
     }

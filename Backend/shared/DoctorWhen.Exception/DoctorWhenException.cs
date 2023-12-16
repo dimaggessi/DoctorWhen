@@ -1,6 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
 namespace DoctorWhen.Exception;
+
+[Serializable]
 public class DoctorWhenException : SystemException
 {
     public DoctorWhenException()

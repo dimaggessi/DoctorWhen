@@ -5,7 +5,7 @@ public class ResponseErrorJson
 
     public ResponseErrorJson(string errorMessage)
     {
-        ErrorMessages.Add(errorMessage);
+        ErrorMessages = new List<string> { errorMessage };
     }
 
     public ResponseErrorJson(List<string> errorMessages)

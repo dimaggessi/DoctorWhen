@@ -27,6 +27,14 @@ public class ExceptionFilter : IExceptionFilter
         {
             ValidatorExceptionHandler(context);
         }
+        else if (context.Exception is InvalidUserException)
+        {
+            UserExceptionHandler(context);
+        }
+        else if (context.Exception is UnauthorizedUserException)
+        {
+            UnauthorizedExceptionHandler(context);
+        }
     }
 
     // Tratamento de exceção quando for algum erro de validação
@@ -36,6 +44,24 @@ public class ExceptionFilter : IExceptionFilter
 
         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
         context.Result = new ObjectResult(new ResponseErrorJson(validatorError.ErrorMessages));
+    }
+
+    // Tratamento de exceção quando o usuário for inválido
+    private static void UserExceptionHandler(ExceptionContext context)
+    {
+        var userError = context.Exception as InvalidUserException;
+
+        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        context.Result = new ObjectResult(new ResponseErrorJson(userError.Message));
+    }
+
+    // Tratamento de exceção quando o usuário não estiver autorizado a acessar o recurso
+    private static void UnauthorizedExceptionHandler(ExceptionContext context)
+    {
+        var userError = context.Exception as UnauthorizedUserException;
+
+        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+        context.Result = new ObjectResult(new ResponseErrorJson(userError.Message));
     }
 
     // Lançar "erro desconhecido" quando for algum erro do sistema (evita vazar informações para o front-end)
