@@ -5,5 +5,5 @@ public class Consulta : EntidadeBase
     public Medico Medico { get; set; }
     public Paciente Paciente { get; set; }
     public Atendente Atendente { get; set; }
-    ICollection<Prescricao> Prescricoes { get; set; }
+    public ICollection<Prescricao> Prescricoes { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DoctorWhen.Domain.Repositories;
-public interface IPrescricaoRepository
+public interface IPrescricaoRepository : IGeneralRepository
 {
     Task<Entities.Prescricao> GetByPrescricaoIdAsync(long id);
-    Task<Entities.Prescricao> GetByConsultaIdAsync(long consultaId);
+    Task<IList<Entities.Prescricao>> GetByConsultaIdAsync(long consultaId);
 }

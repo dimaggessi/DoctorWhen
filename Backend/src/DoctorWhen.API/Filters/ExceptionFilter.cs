@@ -27,6 +27,10 @@ public class ExceptionFilter : IExceptionFilter
         {
             ValidatorExceptionHandler(context);
         }
+        else if (context.Exception is InvalidSearchException)
+        {
+            SearchExceptionHandler(context);
+        }
         else if (context.Exception is InvalidUserException)
         {
             UserExceptionHandler(context);
@@ -46,7 +50,15 @@ public class ExceptionFilter : IExceptionFilter
         context.Result = new ObjectResult(new ResponseErrorJson(validatorError.ErrorMessages));
     }
 
-    // Tratamento de exceção quando o usuário for inválido
+    // Tratamento de exceção quando a busca for inválida
+    private static void SearchExceptionHandler(ExceptionContext context)
+    {
+        var userError = context.Exception as InvalidSearchException;
+
+        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        context.Result = new ObjectResult(new ResponseErrorJson(userError.Message));
+    }
+
     private static void UserExceptionHandler(ExceptionContext context)
     {
         var userError = context.Exception as InvalidUserException;

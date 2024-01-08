@@ -23,6 +23,7 @@ public static class Bootstrapper
     private static void AddServices(IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAtendenteService, AtendenteService>();
         services.AddScoped<ITokenConfigurator, TokenConfigurator>();
         
     }

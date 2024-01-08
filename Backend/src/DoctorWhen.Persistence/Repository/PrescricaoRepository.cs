@@ -4,22 +4,21 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class PrescricaoRepository : IPrescricaoRepository
+public class PrescricaoRepository : GeneralRepository, IPrescricaoRepository
 {
     private readonly DoctorWhenContext _context;
 
-    public PrescricaoRepository(DoctorWhenContext context)
+    public PrescricaoRepository(DoctorWhenContext context) : base(context)
     {
         this._context = context;
     }
 
-    public async Task<Prescricao> GetByConsultaIdAsync(long consultaId)
+    public async Task<IList<Prescricao>> GetByConsultaIdAsync(long consultaId)
     {
         IQueryable<Prescricao> query = _context.Prescricoes
-            .Include(p => p.Consulta)
             .Where(p => p.Consulta.Id == consultaId);
 
-        return await query.FirstOrDefaultAsync();
+        return await query.ToListAsync();
     }
 
     public async Task<Prescricao> GetByPrescricaoIdAsync(long id)

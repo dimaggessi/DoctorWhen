@@ -4,11 +4,11 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class ConsultaRepository : IConsultaRepository
+public class ConsultaRepository : GeneralRepository, IConsultaRepository
 {
     private readonly DoctorWhenContext _context;
 
-    public ConsultaRepository(DoctorWhenContext context)
+    public ConsultaRepository(DoctorWhenContext context) : base(context)
     {
         this._context = context;
     }
@@ -30,8 +30,6 @@ public class ConsultaRepository : IConsultaRepository
     {
         IQueryable<Consulta> query = _context.Consultas
             .Include(c => c.Medico)
-            .Include(c => c.Paciente)
-            .Include(c => c.Atendente)
             .Where(c => c.Medico.Id == medicoId);
 
         return await query.ToListAsync();
@@ -41,13 +39,22 @@ public class ConsultaRepository : IConsultaRepository
     {
         IQueryable<Consulta> query = _context.Consultas
             .Include (c => c.Paciente)
-            .Include (c => c.Atendente)
-            .Include(c => c.Medico)
             .Where(c => c.Paciente.Id == pacienteId);
 
         query = query.OrderBy(c => c.DataConsulta.Day);
 
         return await query.ToListAsync();
+    }
+
+    public Task<Consulta> GetConsultaByDate(DateTimeOffset date)
+    {
+        IQueryable<Consulta> query = _context.Consultas
+            .Include(c => c.Medico)
+            .Include(c => c.Paciente)
+            .Include(c => c.Atendente)
+            .Where(c => c.DataConsulta.Equals(date));
+
+        return query.SingleOrDefaultAsync();
     }
 
     public async Task<Consulta> GetConsultaByIdAsync(long consultaId)
@@ -60,4 +67,6 @@ public class ConsultaRepository : IConsultaRepository
 
         return await query.FirstOrDefaultAsync();
     }
+
+
 }

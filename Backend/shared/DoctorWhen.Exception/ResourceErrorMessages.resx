@@ -117,20 +117,47 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ALREADY_EXISTS" xml:space="preserve">
+    <value>Registro já cadastrado. Tente novamente com um e-mail diferente.</value>
+  </data>
+  <data name="ALREADY_EXISTS_CONSULTA" xml:space="preserve">
+    <value>Registro já cadastrado. Tente novamente com uma data ou horário diferente.</value>
+  </data>
+  <data name="CONSULTA_NOT_FOUND" xml:space="preserve">
+    <value>Não foi encontrada consulta com o ID informado.</value>
+  </data>
+  <data name="EMPTY_DATA" xml:space="preserve">
+    <value>O campo data de nascimento deve ser informado.</value>
+  </data>
   <data name="EMPTY_EMAIL" xml:space="preserve">
-    <value>O email do usuário deve ser informado.</value>
+    <value>O campo email deve ser informado.</value>
+  </data>
+  <data name="EMPTY_ENDERECO" xml:space="preserve">
+    <value>O campo endereço deve ser informado.</value>
+  </data>
+  <data name="EMPTY_ESPECIALIDADE" xml:space="preserve">
+    <value>O campo especialidade deve ser informado.</value>
+  </data>
+  <data name="EMPTY_IDADE" xml:space="preserve">
+    <value>O campo idade deve ser informado.</value>
   </data>
   <data name="EMPTY_NAME" xml:space="preserve">
-    <value>O nome do usuário não pode estar vazio.</value>
+    <value>O campo nome não pode estar vazio.</value>
   </data>
   <data name="EMPTY_PASSWORD" xml:space="preserve">
-    <value>A senha do usário deve ser informada.</value>
+    <value>A senha deve ser informada.</value>
   </data>
   <data name="EMPTY_USERNAME" xml:space="preserve">
-    <value>O nome de usuário não pode estar vazio.</value>
+    <value>O username não pode estar vazio.</value>
+  </data>
+  <data name="INCORRECT_DATE" xml:space="preserve">
+    <value>A data informada não está no formato adequado: "AAAA-MM-ddTHH:mm:ss-03:00" - Exemplo: "2023-01-15T12:30:00-03:00"</value>
   </data>
   <data name="INCORRECT_PASSWORD" xml:space="preserve">
     <value>Falha ao efetuar login. Verifique sua senha.</value>
+  </data>
+  <data name="INVALID_ATENDENTE" xml:space="preserve">
+    <value>O atendente não está vinculado à uma conta de usuário. Contate um admin.</value>
   </data>
   <data name="INVALID_EMAIL" xml:space="preserve">
     <value>O e-mail informado é invalido.</value>
@@ -141,11 +168,23 @@
   <data name="INVALID_PASSWORD" xml:space="preserve">
     <value>A senha deve conter no mínimo 6 (seis) caracteres.</value>
   </data>
+  <data name="INVALID_SEARCH" xml:space="preserve">
+    <value>Nada foi encontrado. A requisição não retornou nenhum resultado na base de dados.</value>
+  </data>
+  <data name="MEDICO_NOT_FOUND" xml:space="preserve">
+    <value>Verifique o ID do médico informado. Registro não encontrado.</value>
+  </data>
   <data name="NAME_LENGTH" xml:space="preserve">
     <value>O nome deve ter 3 (três) ou mais caracteres.</value>
   </data>
+  <data name="PACIENTE_NOT_FOUND" xml:space="preserve">
+    <value>Verifique o ID do paciente informado. Registro não encontrado.</value>
+  </data>
   <data name="UNAUTHORIZED" xml:space="preserve">
-    <value>Você não está autenticado. Faça login para acessar este recurso.</value>
+    <value>Você não está autenticado como admin. Faça login para acessar este recurso.</value>
+  </data>
+  <data name="UNAUTHORIZED_ATENDENTE" xml:space="preserve">
+    <value>Você não está autenticado como atendente. Faça login para acessar este recurso.</value>
   </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>

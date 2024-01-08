@@ -4,11 +4,11 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class PacienteRepository : IPacienteRepository
+public class PacienteRepository : GeneralRepository, IPacienteRepository
 {
     private readonly DoctorWhenContext _context;
 
-    public PacienteRepository(DoctorWhenContext context)
+    public PacienteRepository(DoctorWhenContext context) : base(context)
     {
         this._context = context;
     }

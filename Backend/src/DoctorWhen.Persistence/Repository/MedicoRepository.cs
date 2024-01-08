@@ -5,11 +5,11 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class MedicoRepository : IMedicoRepository
+public class MedicoRepository : GeneralRepository, IMedicoRepository
 {
     private readonly DoctorWhenContext _context;
 
-    public MedicoRepository(DoctorWhenContext context)
+    public MedicoRepository(DoctorWhenContext context) : base(context)
     {
         this._context = context;
     }
@@ -35,7 +35,21 @@ public class MedicoRepository : IMedicoRepository
         return await query.ToListAsync();
     }
 
-    public async Task<Medico> GetMedicoByIdAsync(long id, bool includeConsultas)
+    public async Task<Medico> GetMedicoByEmail(string email, bool includeConsultas = false)
+    {
+        IQueryable<Medico> query = _context.Medicos
+            .Include(m => m.Pacientes)
+            .Where(m => m.Email == email);
+
+        if (includeConsultas)
+        {
+            query = query.Include(m => m.Consultas);
+        }
+
+        return await query.SingleOrDefaultAsync();
+    }
+
+    public async Task<Medico> GetMedicoByIdAsync(long id, bool includeConsultas = false)
     {
         IQueryable<Medico> query = _context.Medicos
             .Include(m => m.Pacientes)
@@ -46,6 +60,6 @@ public class MedicoRepository : IMedicoRepository
             query = query.Include(m => m.Consultas);
         }
 
-        return await query.FirstOrDefaultAsync();
+        return await query.SingleOrDefaultAsync();
     }
 }

@@ -61,7 +61,43 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a O email do usuário deve ser informado..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Registro já cadastrado. Tente novamente com um e-mail diferente..
+        /// </summary>
+        public static string ALREADY_EXISTS {
+            get {
+                return ResourceManager.GetString("ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Registro já cadastrado. Tente novamente com uma data ou horário diferente..
+        /// </summary>
+        public static string ALREADY_EXISTS_CONSULTA {
+            get {
+                return ResourceManager.GetString("ALREADY_EXISTS_CONSULTA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Não foi encontrada consulta com o ID informado..
+        /// </summary>
+        public static string CONSULTA_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("CONSULTA_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo data de nascimento deve ser informado..
+        /// </summary>
+        public static string EMPTY_DATA {
+            get {
+                return ResourceManager.GetString("EMPTY_DATA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo email deve ser informado..
         /// </summary>
         public static string EMPTY_EMAIL {
             get {
@@ -70,7 +106,34 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a O nome do usuário não pode estar vazio..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo endereço deve ser informado..
+        /// </summary>
+        public static string EMPTY_ENDERECO {
+            get {
+                return ResourceManager.GetString("EMPTY_ENDERECO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo especialidade deve ser informado..
+        /// </summary>
+        public static string EMPTY_ESPECIALIDADE {
+            get {
+                return ResourceManager.GetString("EMPTY_ESPECIALIDADE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo idade deve ser informado..
+        /// </summary>
+        public static string EMPTY_IDADE {
+            get {
+                return ResourceManager.GetString("EMPTY_IDADE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo nome não pode estar vazio..
         /// </summary>
         public static string EMPTY_NAME {
             get {
@@ -79,7 +142,7 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha do usário deve ser informada..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve ser informada..
         /// </summary>
         public static string EMPTY_PASSWORD {
             get {
@@ -88,11 +151,20 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a O nome de usuário não pode estar vazio..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O username não pode estar vazio..
         /// </summary>
         public static string EMPTY_USERNAME {
             get {
                 return ResourceManager.GetString("EMPTY_USERNAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A data informada não está no formato adequado: &quot;AAAA-MM-ddTHH:mm:ss-03:00&quot; - Exemplo: &quot;2023-01-15T12:30:00-03:00&quot;.
+        /// </summary>
+        public static string INCORRECT_DATE {
+            get {
+                return ResourceManager.GetString("INCORRECT_DATE", resourceCulture);
             }
         }
         
@@ -102,6 +174,15 @@ namespace DoctorWhen.Exception {
         public static string INCORRECT_PASSWORD {
             get {
                 return ResourceManager.GetString("INCORRECT_PASSWORD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O atendente não está vinculado à uma conta de usuário. Contate um admin..
+        /// </summary>
+        public static string INVALID_ATENDENTE {
+            get {
+                return ResourceManager.GetString("INVALID_ATENDENTE", resourceCulture);
             }
         }
         
@@ -133,6 +214,24 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Nada foi encontrado. A requisição não retornou nenhum resultado na base de dados..
+        /// </summary>
+        public static string INVALID_SEARCH {
+            get {
+                return ResourceManager.GetString("INVALID_SEARCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Verifique o ID do médico informado. Registro não encontrado..
+        /// </summary>
+        public static string MEDICO_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("MEDICO_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O nome deve ter 3 (três) ou mais caracteres..
         /// </summary>
         public static string NAME_LENGTH {
@@ -142,11 +241,29 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Você não está autenticado. Faça login para acessar este recurso..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Verifique o ID do paciente informado. Registro não encontrado..
+        /// </summary>
+        public static string PACIENTE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("PACIENTE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Você não está autenticado como admin. Faça login para acessar este recurso..
         /// </summary>
         public static string UNAUTHORIZED {
             get {
                 return ResourceManager.GetString("UNAUTHORIZED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Você não está autenticado como atendente. Faça login para acessar este recurso..
+        /// </summary>
+        public static string UNAUTHORIZED_ATENDENTE {
+            get {
+                return ResourceManager.GetString("UNAUTHORIZED_ATENDENTE", resourceCulture);
             }
         }
         

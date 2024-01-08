@@ -3,7 +3,6 @@ using DoctorWhen.Communication.Requests;
 using DoctorWhen.Communication.Responses;
 using DoctorWhen.Domain.Identity;
 using DoctorWhen.Exception;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -14,8 +13,26 @@ namespace DoctorWhen.API.Controllers;
 /// </summary>
 public class AdminController : DoctorWhenController
 {
+    /// <summary>
+    /// Efetua o login de usuário.
+    /// </summary>
+    /// <param name="request">Dados de login</param>
+    [HttpPost]
+    [Route("login")]
+    [ProducesResponseType(typeof(ResponseLoginJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Login([FromServices] IUserService userService,
+                                       [FromBody] RequestLoginJson request)
+    {
+        var response = await userService.LoginAsync(request);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Obtém o usuário que possui o ID informado.
+    /// </summary>
     [HttpGet]
-    [Route("atendente/{id}")]
+    [Route("user/{id}")]
     [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetUserByIdAsync([FromServices] IUserService userService, long id)
@@ -27,8 +44,11 @@ public class AdminController : DoctorWhenController
         return Ok(response);
     }
 
+    /// <summary>
+    /// Obtém o usuário que possui o e-mail informado.
+    /// </summary>
     [HttpPost]
-    [Route("atendente/email")]
+    [Route("user/email")]
     [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetUserByEmailAsync([FromServices] IUserService userService,
@@ -41,10 +61,12 @@ public class AdminController : DoctorWhenController
         return Ok(response);
     }
 
+    /// <summary>
+    /// Registra um usuário como atendente.
+    /// </summary>
+    /// <param name="request">Dados do usuário a ser registrado</param>
     [HttpPost]
     [Route("atendente/register")]
-    /* É importante colocar o "Tipo de Resposta" aqui, pois o desenvolvedor do front-end vai saber
-     exatamente o que esperar como resposta. */
     [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status201Created)]
     public async Task<IActionResult> Register([FromServices] IUserService userService,
                                               [FromBody] RequestUserJson request)
@@ -56,17 +78,10 @@ public class AdminController : DoctorWhenController
         return Created(string.Empty, response);
     }
 
-    [HttpPost]
-    [Route("login")]
-    [ProducesResponseType(typeof(ResponseLoginJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Login([FromServices] IUserService userService,
-                                           [FromBody] RequestLoginJson request) 
-    {
-        var response = await userService.LoginAsync(request);
-
-        return Ok(response);
-    }
-
+    /// <summary>
+    /// Atualiza um usuário registrado como atendente.
+    /// </summary>
+    /// <param name="request">Dados do usuário a ser atualizado</param>
     [HttpPut]
     [Route("atendente/update/{id}")]
     [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status204NoContent)]
@@ -82,6 +97,10 @@ public class AdminController : DoctorWhenController
         return NoContent();
     }
 
+    /// <summary>
+    /// Remove um usuário registrado como atendente.
+    /// </summary>
+    /// <param name="id">ID do usuário a ser removido</param>
     [HttpDelete]
     [Route("atendente/delete/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
