@@ -44,6 +44,7 @@ public class AutoMapperConfiguration : Profile
             .ForMember(destinationMember => destinationMember.Consultas, memberOptions => memberOptions.MapFrom(m => m.Consultas));
 
         CreateMap<Domain.Entities.Consulta, Communication.Responses.ResponseConsultaJson>()
+            .ForMember(destinationMember => destinationMember.ConsultaId, memberOptions => memberOptions.MapFrom(c => c.Id))
             .ForMember(destinationMember => destinationMember.DataConsulta, memberOptions => memberOptions.MapFrom(c => c.DataConsulta))
             .ForMember(destinationMember => destinationMember.MedicoId, memberOptions => memberOptions.MapFrom(c => c.Medico.Id))
             .ForMember(destinationMember => destinationMember.NomeMedico, memberOptions => memberOptions.MapFrom(c => c.Medico.Nome))

@@ -117,17 +117,18 @@ public class UserService : IUserService
         return _mapper.Map<ResponseUserJson>(userToReturn);
     }
 
-    public async Task<ResponseUserJson> UpdateAccount(RequestUserUpdateJson request, long id)
+    public async Task<ResponseUserJson> UpdateAccount(RequestUserUpdateJson request)
     {
         await RequestUpdateUserValidation(request);
 
-        var user = await _userRepository.GetUserByIdAsync(id);
+        var user = await _userRepository.GetUserByEmailAsync(request.Email.ToLower());
         if (user == null) throw new InvalidUserException(ResourceErrorMessages.USER_NOT_EXISTS);
 
         var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
         if (result.Succeeded)
         {
+            user.UserName = request.UserName;
             _userRepository.Update(user);
 
             await _unitOfWork.Commit();
@@ -137,14 +138,14 @@ public class UserService : IUserService
             throw new InvalidUserException(ResourceErrorMessages.USER_PASSWORD_RESET_ERROR);
         }
 
-        var atendente = await _atendenteRepository.GetByIdAsync(id);
+        var atendente = await _atendenteRepository.GetByEmailAsync(request.Email.ToLower());
         atendente.Nome = request.Nome;
 
         _atendenteRepository.Update(atendente);
 
         await _unitOfWork.Commit();
 
-        var updatedUser = await _userRepository.GetUserByIdAsync(id);
+        var updatedUser = await _userRepository.GetUserByEmailAsync(request.Email.ToLower());
         
         return _mapper.Map<ResponseUserJson>(updatedUser);
     }
@@ -152,13 +153,14 @@ public class UserService : IUserService
     public async Task DeleteAsync(long id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
+
         if (user == null) throw new InvalidUserException(ResourceErrorMessages.USER_NOT_EXISTS);
 
-        // O UserManager deleta em cascata,
-        // não precisa especificar que o registro na tabela Atendente deve ser excluído também
-        var result = await _userManager.DeleteAsync(user);
-        if (!result.Succeeded) throw new InvalidUserException(ResourceErrorMessages.USER_DELETION_ERROR);
+            await _atendenteRepository.DeleteCascade(user.Id);
 
+            var result = await _userManager.DeleteAsync(user);
+
+            await _unitOfWork.Commit();
     }
 
     private async static Task RequestCreateUserValidation(RequestUserJson request)

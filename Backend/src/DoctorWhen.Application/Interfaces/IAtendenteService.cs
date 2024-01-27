@@ -12,6 +12,6 @@ public interface IAtendenteService
     Task<ResponseConsultaListJson> GetAllConsultasByPacienteIdAsync(string id);
     Task<ResponseMedicoJson> CreateMedicoAsync(RequestMedicoJson request);
     Task<ResponsePacienteJson> CreatePacienteAsync(RequestPacienteJson request, long id);
-    Task<ResponseConsultaJson> CreateConsultaAsync(RequestConsultaJson request, long id);
+    Task<ResponseConsultaJson> CreateConsultaAsync(RequestConsultaRegisterJson request, long id);
     Task<ResponsePrescricaoJson> CreatePrescricaoAsync(RequestPrescricaoJson request);
 }

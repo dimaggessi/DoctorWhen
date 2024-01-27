@@ -4,7 +4,7 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class AtendenteRepository : GeneralRepository, IAtendenteRepository
+public class AtendenteRepository : GenericRepository, IAtendenteRepository
 {
     private readonly DoctorWhenContext _context;
 
@@ -30,5 +30,18 @@ public class AtendenteRepository : GeneralRepository, IAtendenteRepository
             .Where(a => a.UserId == id);
 
         return await query.SingleOrDefaultAsync();
+    }
+
+    public async Task DeleteCascade(long id)
+    {
+        IQueryable<Atendente> query =  _context.Atendentes
+            .Include(a => a.PacientesAtendidos)
+            .ThenInclude(p => p.Consultas)
+            .Include(a => a.User)
+            .Where(a => a.UserId == id);
+
+        var atendente = await query.SingleOrDefaultAsync();
+
+        _context.Remove(atendente);
     }
 }

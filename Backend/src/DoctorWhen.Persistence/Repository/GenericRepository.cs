@@ -2,13 +2,12 @@
 using DoctorWhen.Persistence.Repository.RepositoryAccess;
 
 namespace DoctorWhen.Persistence.Repository;
-public class GeneralRepository : IGeneralRepository
+public class GenericRepository : IGenericRepository
 {
     private readonly DoctorWhenContext _context;
-    public GeneralRepository(DoctorWhenContext context)
+    public GenericRepository(DoctorWhenContext context)
     {
         this._context = context;
-        
     }
 
     public void Add<T>(T entity) where T : class
@@ -31,4 +30,3 @@ public class GeneralRepository : IGeneralRepository
         _context.RemoveRange(entityArray);
     }
 }
-

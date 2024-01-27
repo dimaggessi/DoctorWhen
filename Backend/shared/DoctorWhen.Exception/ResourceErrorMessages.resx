@@ -151,7 +151,13 @@
     <value>O username não pode estar vazio.</value>
   </data>
   <data name="INCORRECT_DATE" xml:space="preserve">
-    <value>A data informada não está no formato adequado: "AAAA-MM-ddTHH:mm:ss-03:00" - Exemplo: "2023-01-15T12:30:00-03:00"</value>
+    <value>A data informada não está no formato adequado: AAAA-MM-ddTHH:mm:ss-03:00 - Exemplo: 2023-01-15T12:30:00-03:00</value>
+  </data>
+  <data name="INCORRECT_DATE_OF_BIRTH" xml:space="preserve">
+    <value>A data informada não está no formato adequado: d/M/yyyy - Exemplo: 5/12/1996</value>
+  </data>
+  <data name="INCORRECT_ESPECIALIDADE" xml:space="preserve">
+    <value>A especialidade informada está incorreta. Deve ser informado o nome ou número: Oncologia = 0, Cardiologia = 1, Endocrinologia = 2, Neurologia = 3.</value>
   </data>
   <data name="INCORRECT_PASSWORD" xml:space="preserve">
     <value>Falha ao efetuar login. Verifique sua senha.</value>
@@ -161,6 +167,9 @@
   </data>
   <data name="INVALID_EMAIL" xml:space="preserve">
     <value>O e-mail informado é invalido.</value>
+  </data>
+  <data name="INVALID_ID" xml:space="preserve">
+    <value>Por favor, informe um número de ID válido.</value>
   </data>
   <data name="INVALID_LOGIN" xml:space="preserve">
     <value>Não foi possível efetuar login. Verifique o e-mail e a senha informados.</value>

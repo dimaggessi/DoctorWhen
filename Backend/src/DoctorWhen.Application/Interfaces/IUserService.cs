@@ -1,6 +1,5 @@
 ﻿using DoctorWhen.Communication.Requests;
 using DoctorWhen.Communication.Responses;
-using Microsoft.AspNetCore.Identity;
 
 namespace DoctorWhen.Application.Interfaces;
 public interface IUserService
@@ -9,6 +8,6 @@ public interface IUserService
     Task<ResponseUserJson> GetUserByEmail(RequestEmailJson request);
     Task<ResponseLoginJson> LoginAsync(RequestLoginJson request);
     Task<ResponseUserJson> CreateAccount(RequestUserJson request);
-    Task<ResponseUserJson> UpdateAccount(RequestUserUpdateJson request, long id);
+    Task<ResponseUserJson> UpdateAccount(RequestUserUpdateJson request);
     Task DeleteAsync(long id);
 }

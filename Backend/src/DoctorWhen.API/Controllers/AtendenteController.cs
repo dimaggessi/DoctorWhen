@@ -30,15 +30,100 @@ public class AtendenteController : DoctorWhenController
     }
 
     /// <summary>
-    /// Obtém o paciente vinculado ao e-mail informado.
+    /// Atualiza o Nome, UserName e Senha de um usuário registrado como atendente.
     /// </summary>
-    [HttpGet]
-    [Route("get/paciente/{email}")]
-    [ProducesResponseType(typeof(ResponsePacienteJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetPacienteByEmailAsync([FromServices] IAtendenteService atendenteService, string email)
+    /// <param name="request">Dados do usuário a ser atualizado</param>
+    [HttpPut]
+    [Route("update")]
+    [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Update([FromServices] IUserService userService,
+                                            [FromBody] RequestUserUpdateJson request)
     {
         VerifyPermission();
-        var response = await atendenteService.GetPacienteByEmailAsync(email);
+
+        var response = await userService.UpdateAccount(request);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Registra um paciente.
+    /// </summary>
+    /// <param name="request">Dados do paciente</param>
+    [HttpPost]
+    [Route("register/paciente")]
+    [ProducesResponseType(typeof(ResponsePacienteJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreatePaciente([FromServices] IAtendenteService atendenteService,
+                                                    [FromBody] RequestPacienteJson request)
+    {
+        VerifyPermission();
+        long id = User.GetUserId();
+        var response = await atendenteService.CreatePacienteAsync(request, id);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Registra um médico.
+    /// </summary>
+    /// <param name="request">Dados do médico</param>
+    [HttpPost]
+    [Route("register/medico")]
+    [ProducesResponseType(typeof(ResponseMedicoJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateMedico([FromServices] IAtendenteService atendenteService,
+                                                [FromBody] RequestMedicoJson request)
+    {
+        VerifyPermission();
+        var response = await atendenteService.CreateMedicoAsync(request);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Registra uma consulta médica.
+    /// </summary>
+    /// <param name="request">Dados da consulta médica</param>
+    [HttpPost]
+    [Route("register/consulta")]
+    [ProducesResponseType(typeof(ResponseConsultaJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateConsulta([FromServices] IAtendenteService atendenteService,
+                                                    [FromBody] RequestConsultaRegisterJson request)
+    {
+        VerifyPermission();
+        long id = User.GetUserId();
+        var response = await atendenteService.CreateConsultaAsync(request, id);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Registra uma receita e vincula a uma consulta médica.
+    /// </summary>
+    /// <param name="request">Dados da receita médica</param>
+    [HttpPost]
+    [Route("register/prescricao")]
+    [ProducesResponseType(typeof(ResponsePrescricaoJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreatePrescricao([FromServices] IAtendenteService atendenteService,
+                                                      [FromBody] RequestPrescricaoJson request)
+    {
+        VerifyPermission();
+        var response = await atendenteService.CreatePrescricaoAsync(request);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Obtém o paciente vinculado ao e-mail informado.
+    /// </summary>
+    [HttpPost]
+    [Route("get/paciente/email")]
+    [ProducesResponseType(typeof(ResponsePacienteJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPacienteByEmailAsync([FromServices] IAtendenteService atendenteService,
+                                                             [FromBody] RequestEmailJson request)
+    {
+        VerifyPermission();
+        var response = await atendenteService.GetPacienteByEmailAsync(request.Email);
 
         return Ok(response);
     }
@@ -98,72 +183,6 @@ public class AtendenteController : DoctorWhenController
     {
         VerifyPermission();
         var response = await atendenteService.GetConsultaAsync(request);
-
-        return Ok(response);
-    }
-
-    /// <summary>
-    /// Registra um paciente.
-    /// </summary>
-    /// <param name="request">Dados do paciente</param>
-    [HttpPost]
-    [Route("register/paciente")]
-    [ProducesResponseType(typeof(ResponsePacienteJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreatePaciente([FromServices] IAtendenteService atendenteService,
-                                                    [FromBody] RequestPacienteJson request)
-    {
-        VerifyPermission();
-        long id = User.GetUserId();
-        var response = await atendenteService.CreatePacienteAsync(request, id);
-
-        return Ok(response);
-    }
-
-    /// <summary>
-    /// Registra um médico.
-    /// </summary>
-    /// <param name="request">Dados do médico</param>
-    [HttpPost]
-    [Route("register/medico")]
-    [ProducesResponseType(typeof(ResponsePacienteJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateMedico([FromServices] IAtendenteService atendenteService,
-                                                [FromBody] RequestMedicoJson request)
-    {
-        VerifyPermission();
-        var response = await atendenteService.CreateMedicoAsync(request);
-
-        return Ok(response);
-    }
-
-    /// <summary>
-    /// Registra uma consulta médica.
-    /// </summary>
-    /// <param name="request">Dados da consulta médica</param>
-    [HttpPost]
-    [Route("register/consulta")]
-    [ProducesResponseType(typeof(ResponseConsultaJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateConsulta([FromServices] IAtendenteService atendenteService,
-                                                    [FromBody] RequestConsultaJson request)
-    {
-        VerifyPermission();
-        long id = User.GetUserId();
-        var response = await atendenteService.CreateConsultaAsync(request, id);
-
-        return Ok(response);
-    }
-
-    /// <summary>
-    /// Registra uma receita e vincula a uma consulta médica.
-    /// </summary>
-    /// <param name="request">Dados da receita médica</param>
-    [HttpPost]
-    [Route("register/prescricao")]
-    [ProducesResponseType(typeof(ResponseConsultaJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreatePrescricao([FromServices] IAtendenteService atendenteService,
-                                                      [FromBody] RequestPrescricaoJson request)
-    {
-        VerifyPermission();
-        var response = await atendenteService.CreatePrescricaoAsync(request);
 
         return Ok(response);
     }

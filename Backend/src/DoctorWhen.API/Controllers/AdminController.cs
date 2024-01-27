@@ -79,25 +79,6 @@ public class AdminController : DoctorWhenController
     }
 
     /// <summary>
-    /// Atualiza um usuário registrado como atendente.
-    /// </summary>
-    /// <param name="request">Dados do usuário a ser atualizado</param>
-    [HttpPut]
-    [Route("atendente/update/{id}")]
-    [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Update([FromServices] IUserService userService,
-                                            [FromBody] RequestUserUpdateJson request,
-                                            long id)
-    {
-        VerifyPermission();
-
-        var response = await userService.UpdateAccount(request, id);
-
-        return NoContent();
-    }
-
-    /// <summary>
     /// Remove um usuário registrado como atendente.
     /// </summary>
     /// <param name="id">ID do usuário a ser removido</param>

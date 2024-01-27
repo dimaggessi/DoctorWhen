@@ -4,7 +4,7 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class UserRepository : GeneralRepository, IUserRepository
+public class UserRepository : GenericRepository, IUserRepository
 {
     private readonly DoctorWhenContext _context;
 

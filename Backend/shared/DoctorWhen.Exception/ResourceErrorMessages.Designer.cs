@@ -160,11 +160,29 @@ namespace DoctorWhen.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a A data informada não está no formato adequado: &quot;AAAA-MM-ddTHH:mm:ss-03:00&quot; - Exemplo: &quot;2023-01-15T12:30:00-03:00&quot;.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A data informada não está no formato adequado: AAAA-MM-ddTHH:mm:ss-03:00 - Exemplo: 2023-01-15T12:30:00-03:00.
         /// </summary>
         public static string INCORRECT_DATE {
             get {
                 return ResourceManager.GetString("INCORRECT_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A data informada não está no formato adequado: d/M/yyyy - Exemplo: 5/12/1996.
+        /// </summary>
+        public static string INCORRECT_DATE_OF_BIRTH {
+            get {
+                return ResourceManager.GetString("INCORRECT_DATE_OF_BIRTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A especialidade informada está incorreta. Deve ser informado o nome ou número: Oncologia = 0, Cardiologia = 1, Endocrinologia = 2, Neurologia = 3..
+        /// </summary>
+        public static string INCORRECT_ESPECIALIDADE {
+            get {
+                return ResourceManager.GetString("INCORRECT_ESPECIALIDADE", resourceCulture);
             }
         }
         
@@ -192,6 +210,15 @@ namespace DoctorWhen.Exception {
         public static string INVALID_EMAIL {
             get {
                 return ResourceManager.GetString("INVALID_EMAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Por favor, informe um número de ID válido..
+        /// </summary>
+        public static string INVALID_ID {
+            get {
+                return ResourceManager.GetString("INVALID_ID", resourceCulture);
             }
         }
         

@@ -37,13 +37,87 @@ public class AtendenteService : IAtendenteService
         this._mapper = mapper;
     }
 
-    public async Task<ResponseConsultaJson> CreateConsultaAsync(RequestConsultaJson request, long atendenteUserId)
+    public async Task<ResponseConsultaJson> GetConsultaAsync(RequestConsultaJson request)
+    {
+        if (String.IsNullOrEmpty(request.ConsultaId)) { throw new ValidatorErrorsException(new List<string> 
+            { ResourceErrorMessages.INVALID_ID }); }
+
+        var consulta = await _consultaRepository.GetConsultaByIdAsync(long.Parse(request.ConsultaId));
+
+        if (consulta == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
+
+        var response = _mapper.Map<ResponseConsultaJson>(consulta);
+
+        var prescricoes = await _prescricaoRepository.GetByConsultaIdAsync(consulta.Id);
+
+        response.Receitas = prescricoes.Select(p => _mapper.Map<ResponsePrescricaoJson>(p)).ToList();
+
+        return response;
+    }
+
+    public async Task<ResponseConsultaListJson> GetAllConsultasByPacienteIdAsync(string id)
+    {
+        var invalidId = long.TryParse(id, out _);
+
+        if (!invalidId) { throw new ValidatorErrorsException(new List<string>() { ResourceErrorMessages.INVALID_ID }); }
+
+        var consultas = await _consultaRepository.GetAllConsultasByPacienteAsync(long.Parse(id));
+
+        if (consultas == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
+
+        var response = consultas.Select(c => _mapper.Map<ResponseConsultaJson>(c));
+
+        return new ResponseConsultaListJson { Consultas = response.ToList() };
+    }
+
+    public async Task<ResponsePacienteJson> GetPacienteByEmailAsync(string email)
+    {
+        if (String.IsNullOrEmpty(email)) { throw new ValidatorErrorsException(new List<string> 
+            { ResourceErrorMessages.EMPTY_EMAIL }); }
+
+        var paciente = await _pacienteRepository.GetPacienteByEmailAsync(email.ToLower());
+
+        if (paciente == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
+
+        var response = _mapper.Map<ResponsePacienteJson>(paciente);
+
+        return response;
+    }
+
+    public async Task<ResponseMedicoListJson> GetAllMedicosAsync()
+    {
+        var medicosList = await _medicoRepository.GetAllMedicosAsync();
+
+        var responseList = medicosList.Select(i => _mapper.Map<ResponseMedicoJson>(i));
+
+        return new ResponseMedicoListJson
+        {
+            Medicos = responseList.ToList()
+        };
+    }
+
+    public async Task<ResponseMedicoJson> GetMedicoByIdAsync(string id)
+    {
+        var invalidId = long.TryParse(id, out _);
+
+        if (!invalidId) { throw new ValidatorErrorsException(new List<string>() { ResourceErrorMessages.INVALID_ID }); }
+
+        var medico = await _medicoRepository.GetMedicoByIdAsync(long.Parse(id), true);
+
+        if (medico == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
+
+        var response = _mapper.Map<ResponseMedicoJson>(medico);
+
+        return response;
+    }
+
+    public async Task<ResponseConsultaJson> CreateConsultaAsync(RequestConsultaRegisterJson request, long atendenteUserId)
     {
         var date = request.DataConsulta;
 
         if (!DateTimeOffset.TryParse(date, out DateTimeOffset dateTimeOffset))
         {
-            throw new InvalidOperationException(ResourceErrorMessages.INCORRECT_DATE);
+            throw new ValidatorErrorsException(new List<string> { ResourceErrorMessages.INCORRECT_DATE });
         }
 
         var consulta = await _consultaRepository.GetConsultaByDate(DateTimeOffset.Parse(date));
@@ -69,12 +143,18 @@ public class AtendenteService : IAtendenteService
         _consultaRepository.Add(consulta);
         await _unitOfWork.Commit();
 
+        consulta = await _consultaRepository.GetConsultaByDate(DateTimeOffset.Parse(date));
         return _mapper.Map<ResponseConsultaJson>(consulta);
     }
 
     public async Task<ResponseMedicoJson> CreateMedicoAsync(RequestMedicoJson request)
     {
         await CreateMedicoRequestValidation(request);
+
+        var especialidade = Enum.TryParse<Especialidade>(request.Especialidade, out Especialidade result)
+            && Enum.IsDefined(typeof(Especialidade), result);
+
+        if (!especialidade) { throw new ValidatorErrorsException(new List<string>() { ResourceErrorMessages.INCORRECT_ESPECIALIDADE }); }
 
         var medico = await _medicoRepository.GetMedicoByEmail(request.Email.ToLower());
         if (medico != null) { throw new InvalidOperationException(ResourceErrorMessages.ALREADY_EXISTS); }
@@ -96,6 +176,11 @@ public class AtendenteService : IAtendenteService
     {
         await CreatePacienteRequestValidation(request);
 
+        if (!DateTime.TryParseExact(request.DataNascimento, "d/M/yyyy", null, DateTimeStyles.None, out _))
+        {
+            throw new ValidatorErrorsException(new List<string> { ResourceErrorMessages.INCORRECT_DATE_OF_BIRTH });
+        }
+
         var paciente = await _pacienteRepository.GetPacienteByEmailAsync(request.Email.ToLower());
 
         if (paciente != null) { throw new InvalidOperationException(ResourceErrorMessages.ALREADY_EXISTS); }
@@ -110,7 +195,7 @@ public class AtendenteService : IAtendenteService
             Email = request.Email.ToLower(),
             Idade = int.Parse(request.Idade.ToString()),
             Endereco = request.Endereco,
-            DataNascimento = DateTime.ParseExact(request.DataNascimento, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+            DataNascimento = DateTime.ParseExact(request.DataNascimento, "d/M/yyyy", CultureInfo.InvariantCulture),
             Atendentes = new List<Atendente>()
         };
 
@@ -124,9 +209,13 @@ public class AtendenteService : IAtendenteService
 
     public async Task<ResponsePrescricaoJson> CreatePrescricaoAsync(RequestPrescricaoJson request)
     {
+        var invalidId = long.TryParse(request.ConsultaId, out _);
+
+        if (!invalidId) { throw new ValidatorErrorsException(new List<string>() { ResourceErrorMessages.INVALID_ID }); }
+        
         var consulta = await _consultaRepository.GetConsultaByIdAsync(long.Parse(request.ConsultaId));
 
-        if (consulta == null) { throw new InvalidOperationException(ResourceErrorMessages.CONSULTA_NOT_FOUND); }
+        if (consulta == null) { throw new ValidatorErrorsException(new List<string> { ResourceErrorMessages.CONSULTA_NOT_FOUND }); }
 
 
         Prescricao prescricao = new()
@@ -145,67 +234,6 @@ public class AtendenteService : IAtendenteService
         {
             Receita = prescricao.Receita
         };
-
-        return response;
-    }
-
-    public async Task<ResponseConsultaJson> GetConsultaAsync(RequestConsultaJson request)
-    {
-        var consulta = await _consultaRepository.GetConsultaByIdAsync(long.Parse(request.ConsultaId));
-
-        if (consulta == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
-
-        var response = _mapper.Map<ResponseConsultaJson>(consulta);
-
-        var prescricoes = await _prescricaoRepository.GetByConsultaIdAsync(consulta.Id);
-
-        response.Receitas = prescricoes.Select(p => _mapper.Map<ResponsePrescricaoJson>(p)).ToList();
-
-        return response;
-    }
-
-    public async Task<ResponseConsultaListJson> GetAllConsultasByPacienteIdAsync(string id)
-    {
-        var consultas = await _consultaRepository.GetAllConsultasByPacienteAsync(long.Parse(id));
-
-        if (consultas == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
-
-        var response = consultas.Select(c => _mapper.Map<ResponseConsultaJson>(c));
-
-        return new ResponseConsultaListJson { Consultas = response.ToList() };
-    }
-
-    public async Task<ResponsePacienteJson> GetPacienteByEmailAsync(string email)
-    {
-        var paciente = await _pacienteRepository.GetPacienteByEmailAsync(email.ToLower());
-
-        if (paciente == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
-
-        var response = _mapper.Map<ResponsePacienteJson>(paciente);
-
-        return response;
-
-    }
-
-    public async Task<ResponseMedicoListJson> GetAllMedicosAsync()
-    {
-        var medicosList = await _medicoRepository.GetAllMedicosAsync();
-
-        var responseList = medicosList.Select(i => _mapper.Map<ResponseMedicoJson>(i));
-
-        return new ResponseMedicoListJson
-        {
-            Medicos = responseList.ToList()
-        };
-    }
-
-    public async Task<ResponseMedicoJson> GetMedicoByIdAsync(string id)
-    {
-        var medico = await _medicoRepository.GetMedicoByIdAsync(long.Parse(id), true);
-
-        if (medico == null) { throw new InvalidSearchException(ResourceErrorMessages.INVALID_SEARCH); }
-
-        var response = _mapper.Map<ResponseMedicoJson>(medico);
 
         return response;
     }

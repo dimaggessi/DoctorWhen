@@ -1,5 +1,5 @@
 ﻿namespace DoctorWhen.Domain.Repositories;
-public interface IConsultaRepository : IGeneralRepository
+public interface IConsultaRepository : IGenericRepository
 {
     Task<IList<Entities.Consulta>> GetAllConsultasByDateAsync(DateTime date);
     Task<IList<Entities.Consulta>> GetAllConsultasByPacienteAsync(long pacienteId);

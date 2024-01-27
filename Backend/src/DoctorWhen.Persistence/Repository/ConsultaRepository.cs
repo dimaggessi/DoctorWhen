@@ -4,7 +4,7 @@ using DoctorWhen.Persistence.Repository.RepositoryAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorWhen.Persistence.Repository;
-public class ConsultaRepository : GeneralRepository, IConsultaRepository
+public class ConsultaRepository : GenericRepository, IConsultaRepository
 {
     private readonly DoctorWhenContext _context;
 

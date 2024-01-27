@@ -1,6 +1,7 @@
 ﻿namespace DoctorWhen.Communication.Responses;
 public class ResponseConsultaJson
 {
+    public string ConsultaId { get; set; }
     public string PacienteId { get; set; }
     public string NomePaciente { get; set; }
     public string MedicoId { get; set; }

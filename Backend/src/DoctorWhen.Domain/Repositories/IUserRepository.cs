@@ -1,7 +1,7 @@
 ﻿using DoctorWhen.Domain.Identity;
 
 namespace DoctorWhen.Domain.Repositories;
-public interface IUserRepository : IGeneralRepository
+public interface IUserRepository : IGenericRepository
 {
     Task<ICollection<User>> GetAllUsersAsync();
     Task<User> GetUserByIdAsync(long id);

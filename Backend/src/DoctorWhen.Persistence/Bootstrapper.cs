@@ -24,7 +24,7 @@ public static class Bootstrapper
 
     private static void AddRepositories(IServiceCollection services)
     {
-        services.AddScoped<IGeneralRepository, GeneralRepository>();
+        services.AddScoped<IGenericRepository, GenericRepository>();
         services.AddScoped<IConsultaRepository, ConsultaRepository>();
         services.AddScoped<IMedicoRepository, MedicoRepository>();
         services.AddScoped<IPacienteRepository, PacienteRepository>();

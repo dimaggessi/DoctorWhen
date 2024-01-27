@@ -1,5 +1,5 @@
 ﻿namespace DoctorWhen.Domain.Repositories;
-public interface IMedicoRepository : IGeneralRepository
+public interface IMedicoRepository : IGenericRepository
 {   
     Task<Entities.Medico> GetMedicoByIdAsync(long id, bool includeConsultas = false);
     Task<Entities.Medico> GetMedicoByEmail(string email, bool includeConsultas = false);
