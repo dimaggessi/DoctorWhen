@@ -1,0 +1,2173 @@
+{
+	"info": {
+		"_postman_id": "1e478461-1158-410d-9bcc-867d4e692ca9",
+		"name": "DoctorWhen.Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15383230",
+		"_collection_link": "https://www.postman.com/altimetry-operator-77818461/workspace/net-db/collection/15383230-1e478461-1158-410d-9bcc-867d4e692ca9?action=share&source=collection_link&creator=15383230"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login as admin\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"userName\");\r",
+									"    pm.response.to.have.jsonBody(\"token\");\r",
+									"\r",
+									"    const response = pm.response.json();\r",
+									"    console.log(response);\r",
+									"\r",
+									"    pm.collectionVariables.set(\"adminToken\", response.token);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@email.com\",\r\n  \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atendente Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate request /atendente/register\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"userId\");\r",
+									"    pm.response.to.have.jsonBody(\"userName\");\r",
+									"    pm.response.to.have.jsonBody(\"email\");\r",
+									"\r",
+									"    let response = pm.response.json();\r",
+									"\r",
+									"    pm.collectionVariables.set(\"atendenteId\", response.userId);\r",
+									"    pm.collectionVariables.set(\"atendenteUserName\", response.userName);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Generate Password\r",
+									"let password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+									"\r",
+									"//Generate Email\r",
+									"let email = pm.variables.replaceIn(\"{{$randomEmail}}\");\r",
+									"\r",
+									"pm.collectionVariables.set(\"atendentePassword\", password);\r",
+									"pm.collectionVariables.set(\"atendenteEmail\", email);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"userName\": \"{{$randomUserName}}\",\r\n  \"email\": \"{{atendenteEmail}}\",\r\n  \"password\": \"{{atendentePassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/atendente/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"atendente",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Atendente by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find Atendente by id\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"userId\");\r",
+									"    pm.response.to.have.jsonBody(\"userName\");\r",
+									"    pm.response.to.have.jsonBody(\"email\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/user/{{atendenteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"{{atendenteId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Atendente by email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find Atendente by email\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"userId\");\r",
+									"    pm.response.to.have.jsonBody(\"userName\");\r",
+									"    pm.response.to.have.jsonBody(\"email\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{atendenteEmail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/user/email",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"email"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Atendente",
+			"item": [
+				{
+					"name": "Login as Atendente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login as atendente\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"userName\");\r",
+									"    pm.response.to.have.jsonBody(\"token\");\r",
+									"\r",
+									"    const response = pm.response.json();\r",
+									"    console.log(response);\r",
+									"\r",
+									"    pm.collectionVariables.set(\"atendenteToken\", response.token);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{atendenteEmail}}\",\r\n  \"password\": \"{{atendentePassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atendente Update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Generate a New Password\r",
+									"let password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+									"\r",
+									"pm.collectionVariables.set(\"atendenteNewPassword\", password);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Atendente Update by email\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"userId\");\r",
+									"    pm.response.to.have.jsonBody(\"userName\");\r",
+									"    pm.response.to.have.jsonBody(\"email\");\r",
+									"\r",
+									"    console.log(pm.collectionVariables.get(\"atendentePassword\"));\r",
+									"    console.log(pm.collectionVariables.get(\"atendenteNewPassword\"));\r",
+									"\r",
+									"    let newpassd = pm.collectionVariables.get(\"atendenteNewPassword\");\r",
+									"\r",
+									"    pm.collectionVariables.set(\"atendentePassword\", newpassd);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"userName\": \"{{$randomUserName}}\",\r\n  \"email\": \"{{atendenteEmail}}\",\r\n  \"currentPassword\": \"{{atendentePassword}}\",\r\n  \"newPassword\": \"{{atendenteNewPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Paciente Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Paciente Register\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"pacienteId\");\r",
+									"    pm.response.to.have.jsonBody(\"nome\");\r",
+									"    pm.response.to.have.jsonBody(\"email\");\r",
+									"\r",
+									"    let response = pm.response.json();\r",
+									"\r",
+									"    pm.collectionVariables.set(\"pacienteId\", response.pacienteId);\r",
+									"    pm.collectionVariables.set(\"pacienteEmail\", response.email);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// PACIENTE DATE OF BIRTH\r",
+									"let day = _.random(1, 28);\r",
+									"let month = _.random(1, 12);\r",
+									"let year = _.random(1930, 2015);\r",
+									"\r",
+									"let formattedDate = `${day}/${month}/${year}`;\r",
+									"\r",
+									"pm.collectionVariables.set(\"pacienteDateOfBirth\", formattedDate);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"dataNascimento\": \"{{pacienteDateOfBirth}}\",\r\n  \"idade\": {{$randomInt}},\r\n  \"endereco\": \"{{$randomStreetAddress}}\",\r\n  \"email\": \"{{$randomEmail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/register/paciente",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"register",
+								"paciente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Medico Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Medico Register\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"medicoId\");\r",
+									"    pm.response.to.have.jsonBody(\"nome\");\r",
+									"    pm.response.to.have.jsonBody(\"especialidade\");\r",
+									"\r",
+									"    let response = pm.response.json();\r",
+									"\r",
+									"    pm.collectionVariables.set(\"medicoId\", response.medicoId);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// PACIENTE DATE OF BIRTH\r",
+									"let especialidade = _.random(0, 3);\r",
+									"\r",
+									"pm.collectionVariables.set(\"especialidadeMedica\", especialidade);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"especialidade\": \"{{especialidadeMedica}}\",\r\n  \"email\": \"{{$randomEmail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/register/medico",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"register",
+								"medico"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Consulta Register\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"pacienteId\");\r",
+									"    pm.response.to.have.jsonBody(\"medicoId\");\r",
+									"    pm.response.to.have.jsonBody(\"dataConsulta\");\r",
+									"\r",
+									"    let response = pm.response.json();\r",
+									"\r",
+									"    pm.collectionVariables.set(\"consultaId\", response.consultaId);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// SET THE CONSULTA DATETIME CORRECTLY AAAA-MM-ddTHH:mm:ss-03:00\r",
+									"//  - Exemplo: 2023-01-15T12:30:00-03:00\r",
+									"\r",
+									"let seconds = _.random(10, 59);\r",
+									"let minutes = _.random(10, 59);\r",
+									"let hour = _.random(10, 23);\r",
+									"let day = _.random(10, 28);\r",
+									"let month = _.random(1, 12);\r",
+									"let year = _.random(2024, 2030);\r",
+									"\r",
+									"let datetime = `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-03:00`;\r",
+									"\r",
+									"pm.collectionVariables.set(\"consultaDateTime\", datetime);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"dataConsulta\": \"{{consultaDateTime}}\",\r\n  \"pacienteId\": \"{{pacienteId}}\",\r\n  \"medicoId\": \"{{medicoId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/register/consulta",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"register",
+								"consulta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Receita Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Receita Register\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"receita\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"consultaId\": \"{{consultaId}}\",\r\n  \"receita\": \"{{$randomLoremParagraph}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/register/prescricao",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"register",
+								"prescricao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Paciente by email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find Paciente by email\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"pacienteId\");\r",
+									"    pm.response.to.have.jsonBody(\"consultas\");\r",
+									"    pm.response.to.have.jsonBody(\"medicos\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{pacienteEmail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/get/paciente/email",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"get",
+								"paciente",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Consulta",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find Consulta\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"\r",
+									"    pm.response.to.have.jsonBody(\"consultaId\");\r",
+									"    pm.response.to.have.jsonBody(\"nomePaciente\");\r",
+									"    pm.response.to.have.jsonBody(\"nomeMedico\");\r",
+									"    pm.response.to.have.jsonBody(\"dataConsulta\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"consultaId\": \"{{consultaId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/atendente/get/consulta",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"get",
+								"consulta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Consulta by Paciente Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find Consulta by Paciente Id\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"\r",
+									"    let response = pm.response.json();\r",
+									"\r",
+									"    pm.response.to.have.jsonBody(response.consultaId);\r",
+									"    pm.response.to.have.jsonBody(response.nomePaciente);\r",
+									"    pm.response.to.have.jsonBody(response.nomeMedico);\r",
+									"    pm.response.to.have.jsonBody(response.dataConsulta);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/atendente/get/consulta/paciente/{{pacienteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"get",
+								"consulta",
+								"paciente",
+								"{{pacienteId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find All Medicos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find All Medicos\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"medicos\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/atendente/get/medico/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"get",
+								"medico",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Medico by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Find Medico by id\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.body;\r",
+									"    pm.response.to.have.jsonBody(\"medicoId\");\r",
+									"    pm.response.to.have.jsonBody(\"especialidade\");\r",
+									"    pm.response.to.have.jsonBody(\"email\");\r",
+									"    pm.response.to.have.jsonBody(\"consultas\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{atendenteToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/atendente/get/medico/{{medicoId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"atendente",
+								"get",
+								"medico",
+								"{{medicoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Error handling",
+			"item": [
+				{
+					"name": "AdminEndpointErrors",
+					"item": [
+						{
+							"name": "[Error Test] Login as admin - Invalid credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Login as admin - Invalid credentials\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Não foi possível efetuar login. Verifique o e-mail e a senha informados.\"])\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"admin_wrong@email.com\",\r\n  \"password\": \"admin_wrong_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Atendente Register - Invalid Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Atendente Register - Invalid token\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(401);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Você não está autenticado como admin. Faça login para acessar este recurso.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Generate Password\r",
+											"let password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+											"\r",
+											"//Generate Email\r",
+											"let email = pm.variables.replaceIn(\"{{$randomEmail}}\");\r",
+											"\r",
+											"pm.collectionVariables.set(\"atendentePassword\", password);\r",
+											"pm.collectionVariables.set(\"atendenteEmail\", email);\r",
+											"\r",
+											"// Setting Invalid Token variable\r",
+											"let invalidToken = pm.collectionVariables.get(\"adminToken\") + \"7777jjFkkzTEST\";\r",
+											"\r",
+											"pm.collectionVariables.set(\"adminInvalidToken\", invalidToken);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminInvalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"userName\": \"{{$randomUserName}}\",\r\n  \"email\": \"{{atendenteEmail}}\",\r\n  \"password\": \"{{atendentePassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/atendente/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"atendente",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Atendente by id - Invalid Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Atendente by id - Invalid Id\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"O usuário não está cadastrado na base de dados. Verifique os dados informados.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// SET INVALID ID\r",
+											"let id = pm.collectionVariables.get(\"atendenteId\");\r",
+											"id += 998;\r",
+											"\r",
+											"pm.collectionVariables.set(\"invalidId\", id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/user/{{invalidId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"user",
+										"{{invalidId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Atendente by email - Invalid Email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Atendente by email - Invalid Email\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"O usuário não está cadastrado na base de dados. Verifique os dados informados.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"invalidemail@email.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/user/email",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"user",
+										"email"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AtendenteEndpointErrors",
+					"item": [
+						{
+							"name": "[Error Test] Login as atendente - Invalid credentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Login as atendente - Invalid credentials\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Não foi possível efetuar login. Verifique o e-mail e a senha informados.\"])\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"atendente_wrong@email.com\",\r\n  \"password\": \"atendente_wrong_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Atendente Update - Invalid Password",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Generate a New Password\r",
+											"let password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+											"\r",
+											"pm.collectionVariables.set(\"atendenteNewPassword\", password);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Atendente Update by Id - Invalid Password\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"userName\": \"{{atendenteUserName}}\",\r\n  \"email\": \"{{atendenteEmail}}\",\r\n  \"currentPassword\": \"xxxInvalidPasswordxxx\",\r\n  \"newPassword\": \"{{atendenteNewPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/update",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Paciente Register - Incorrect Date",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Paciente Register - Incorrect Date\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// PACIENTE DATE OF BIRTH\r",
+											"let day = _.random(32, 50);\r",
+											"let month = _.random(13, 20);\r",
+											"let year = _.random(1930, 2015);\r",
+											"\r",
+											"let formattedDate = `${day}/${month}/${year}`;\r",
+											"\r",
+											"pm.collectionVariables.set(\"invalidDateOfBirth\", formattedDate);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"dataNascimento\": \"{{invalidDateOfBirth}}\",\r\n  \"idade\": {{$randomInt}},\r\n  \"endereco\": \"{{$randomStreetAddress}}\",\r\n  \"email\": \"{{$randomEmail}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/register/paciente",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"register",
+										"paciente"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Paciente Register - Empty fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Paciente Register - Empty Fields\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/register/paciente",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"register",
+										"paciente"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Medico Register - Incorrect Especialidade",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Medico Register - Incorrect Especialidade\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"especialidade\": \"7\",\r\n  \"email\": \"{{$randomEmail}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/register/medico",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"register",
+										"medico"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Medico Register - Empty fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Medico Register - Empty Fields\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// PACIENTE DATE OF BIRTH\r",
+											"let especialidade = _.random(0, 3);\r",
+											"\r",
+											"pm.collectionVariables.set(\"especialidadeMedica\", especialidade);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/register/medico",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"register",
+										"medico"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Consulta Register - Incorrect Date",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Consulta Register - Empty Fields\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"// SET THE CONSULTA DATETIME CORRECTLY AAAA-MM-ddTHH:mm:ss-03:00\r",
+											"//  - Exemplo: 2023-01-15T12:30:00-03:00\r",
+											"\r",
+											"let seconds = _.random(10, 59);\r",
+											"let minutes = _.random(10, 59);\r",
+											"let hour = _.random(10, 23);\r",
+											"let day = _.random(32, 35);\r",
+											"let month = _.random(1, 12);\r",
+											"let year = _.random(1930, 2015);\r",
+											"\r",
+											"let datetime = `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-03:00`;\r",
+											"\r",
+											"pm.collectionVariables.set(\"consultaDateTime\", datetime);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"dataConsulta\": \"{{consultaDateTime}}\",\r\n  \"pacienteId\": \"{{pacienteId}}\",\r\n  \"medicoId\": \"{{medicoId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/register/consulta",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"register",
+										"consulta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Receita Register - Invalid Consulta Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Receita Register - Invalid Consulta Id\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Não foi encontrada consulta com o ID informado.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"consultaId\": \"999\",\r\n  \"receita\": \"{{$randomLoremParagraph}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/register/prescricao",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"register",
+										"prescricao"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Paciente by email - Empty email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Paciente by email - Empty email\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"O campo email deve ser informado.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/get/paciente/email",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"get",
+										"paciente",
+										"email"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Consulta by id - Invalid Consulta Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Consulta by id - Invalid Consulta Id\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Nada foi encontrado. A requisição não retornou nenhum resultado na base de dados.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"consultaId\": \"999\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/get/consulta",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"get",
+										"consulta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Consulta by id - Empty Field",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Consulta - Invalid Consulta Id\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Por favor, informe um número de ID válido.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"consultaId\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/atendente/get/consulta",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"get",
+										"consulta"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Consulta by Paciente Id - Invalid Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Consulta by paciente id - Invalid Paciente Id\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Por favor, informe um número de ID válido.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/atendente/get/consulta/paciente/invalidId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"get",
+										"consulta",
+										"paciente",
+										"invalidId"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Error Test] Find Medico by id - Invalid Medico Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error Test: Find Medico by id - Invalid Medico Id\", () => {\r",
+											"    pm.response.to.be.error;\r",
+											"    pm.response.to.have.status(400);\r",
+											"    pm.response.to.have.body;\r",
+											"    pm.response.to.have.jsonBody(\"errorMessages\");\r",
+											"    pm.response.to.have.jsonBody([\"Por favor, informe um número de ID válido.\"]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{atendenteToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/atendente/get/medico/invalidId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"atendente",
+										"get",
+										"medico",
+										"invalidId"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin - Delete Atendente",
+			"item": [
+				{
+					"name": "Delete Atendente by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin - Delete Atendente by id\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/atendente/delete/{{atendenteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"atendente",
+								"delete",
+								"{{atendenteId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7277",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "ADMIN_TOKEN"
+		},
+		{
+			"key": "atendentePassword",
+			"value": "ATENDENTE_PASSWORD"
+		},
+		{
+			"key": "atendenteEmail",
+			"value": "ATENDENTE_EMAIL"
+		},
+		{
+			"key": "atendenteId",
+			"value": "ATENDENTE_ID"
+		},
+		{
+			"key": "atendenteUserName",
+			"value": "ATENDENTE_USERNAME"
+		},
+		{
+			"key": "atendenteNewPassword",
+			"value": "ATENDENTE_NEWPASSWORD"
+		},
+		{
+			"key": "invalidId",
+			"value": "ID_NOT_FOUND"
+		},
+		{
+			"key": "atendenteToken",
+			"value": "ATENDENTE_TOKEN"
+		},
+		{
+			"key": "adminInvalidToken",
+			"value": "ADMIN_INVALID_TOKEN"
+		},
+		{
+			"key": "pacienteDateOfBirth",
+			"value": "PACIENTE_DATE_OF_BIRTH"
+		},
+		{
+			"key": "invalidDateOfBirth",
+			"value": "INVALID_DATE_OF_BIRTH"
+		},
+		{
+			"key": "especialidadeMedica",
+			"value": "MEDICAL_SPECIALTY"
+		},
+		{
+			"key": "consultaDateTime",
+			"value": "CONSULTA_DATETIME"
+		},
+		{
+			"key": "pacienteId",
+			"value": "PACIENTE_ID"
+		},
+		{
+			"key": "medicoId",
+			"value": "MEDICO_ID"
+		},
+		{
+			"key": "consultaId",
+			"value": "CONSULTA_ID"
+		},
+		{
+			"key": "pacienteEmail",
+			"value": ""
+		}
+	]
+}
